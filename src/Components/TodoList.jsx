@@ -5,6 +5,17 @@ const TodoList = ({ todos, setTodos }) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
 
+  const handleComplete = (todo) => {
+    setTodos(
+      todos.map((item) => {
+        if (item.id === todo.id) {
+          return { ...item, completed: !item.completed };
+        }
+        return item;
+      })
+    );
+  };
+
   return (
     <div>
       {todos.map((todo) => (
@@ -16,7 +27,7 @@ const TodoList = ({ todos, setTodos }) => {
             onChange={(event) => event.preventDefault()}
           />
           <div className="inline">
-            <button className="m-[4px]">
+            <button className="m-[4px]" onClick={() => handleComplete(todo)}>
               <FiCheckCircle size={25}></FiCheckCircle>
             </button>
             <button className="">
