@@ -1,14 +1,40 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
-const Form = ({ input, setInput, todos, setTodos }) => {
+const Form = ({
+  input,
+  setInput,
+  todos,
+  setTodos,
+  editTodos,
+  setEditTodos,
+}) => {
   const onInputChange = (event) => {
     setInput(event.target.value);
   };
+  const updateTodo = (title, id, completed) => {
+    const newTodo = todos.map((todo) =>
+      todo.id === id ? { title: title, id: id, completed: completed } : todo
+    );
+    setTodos(newTodo);
+    setEditTodos("");
+  };
+
+  useEffect(() => {
+    if (editTodos) {
+      setInput(editTodos.title);
+    } else {
+      setInput("");
+    }
+  }, [setInput, editTodos]);
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    setTodos([...todos, { id: uuidv4(), title: input, completed: false }]);
-    setInput("");
+    if (!editTodos) {
+      setTodos([...todos, { id: uuidv4(), title: input, completed: false }]);
+      setInput("");
+    } else {
+      updateTodo(input, editTodos.id, editTodos.completed);
+    }
   };
 
   return (
@@ -26,7 +52,7 @@ const Form = ({ input, setInput, todos, setTodos }) => {
           type="submit"
           className="m-6 text-green-800 bg-gradient-to-r from-cyan-300 to-blue-900 h-10 w-[100px] hover:scale-105 font-bold rounded-xl "
         >
-          Add
+          {editTodos ? "Update" : "Add"}
         </button>
       </form>
     </div>

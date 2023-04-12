@@ -1,6 +1,10 @@
 import React from "react";
 import { FiEdit, FiTrash2, FiCheckCircle } from "react-icons/fi";
-const TodoList = ({ todos, setTodos }) => {
+const TodoList = ({ todos, setTodos, setEditTodos, editTodos }) => {
+  const handleEdit = ({ id }) => {
+    const findTodo = todos.find((todo) => todo.id === id);
+    setEditTodos(findTodo);
+  };
   const handleDelete = ({ id }) => {
     setTodos(todos.filter((todo) => todo.id !== id));
   };
@@ -21,7 +25,9 @@ const TodoList = ({ todos, setTodos }) => {
       {todos.map((todo) => (
         <li key={todo.id}>
           <input
-            className="font-light border"
+            className={`font-light border ${
+              todo.completed ? "line-through" : ""
+            }`}
             type="text"
             value={todo.title}
             onChange={(event) => event.preventDefault()}
@@ -30,7 +36,7 @@ const TodoList = ({ todos, setTodos }) => {
             <button className="m-[4px]" onClick={() => handleComplete(todo)}>
               <FiCheckCircle size={25}></FiCheckCircle>
             </button>
-            <button className="">
+            <button className="" onClick={() => handleEdit(todo)}>
               <FiEdit size={25}></FiEdit>
             </button>
             <button onClick={() => handleDelete(todo)}>
